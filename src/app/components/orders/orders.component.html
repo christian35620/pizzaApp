@@ -1,0 +1,34 @@
+<div *ngIf="orders.length > 0; else noorders">
+    <ul *ngFor="let order of orders">
+        <li>
+            {{ order.id }} <br />
+            {{ order.date | date: "M/d/yy, h:mm:ss a" }} <br />
+            {{ order.orderDetails | json }} <br />
+            {{ order.customer | json }} <br />
+            {{ order.address | json }} <br />
+            <button (click)="deleteOrder(order)">
+                Delete
+            </button>
+
+            <!-- <button (click)="editOrder($event, order)">
+         Edit
+        </button> -->
+            <!-- <div *ngIf="editing && editingOrder.id == order.id">
+          <form (ngSubmit)="updateOrder()">
+            <input type="text" name="name" [(ngModel)]="editingOrder.name">
+            <input type="text" name="description" [(ngModel)]="editingOrder.description">
+            <input type="text" name="price" [(ngModel)]="editingOrder.price">
+            <button type="submit">
+              Update
+            </button>
+          </form>
+        </div> -->
+        </li>
+    </ul>
+</div>
+
+<ng-template #noorders>
+    <p>
+        There are no orders yet.
+    </p>
+</ng-template>

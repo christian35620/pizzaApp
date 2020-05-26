@@ -1,39 +1,37 @@
-import { BrowserModule } from "@angular/platform-browser"
-import { NgModule } from "@angular/core"
-
 import { AngularFireModule } from "@angular/fire"
 import { AngularFirestoreModule } from "@angular/fire/firestore"
+
+import { NgModule } from "@angular/core"
+import { BrowserModule } from "@angular/platform-browser"
+import { HttpClientModule } from "@angular/common/http"
+import { FlexLayoutModule } from "@angular/flex-layout"
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
+
 import { environment } from "../environments/environment"
 
+import { MaterialModule } from "./shared/material.module"
 import { AppRoutingModule } from "./app-routing.module"
 import { AppComponent } from "./app.component"
-import { NavbarComponent } from "./components/shared/navbar/navbar.component"
-import { HomeComponent } from "./components/home/home.component"
-import { ContactComponent } from "./components/contact/contact.component"
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
-import { FormsModule, ReactiveFormsModule } from "@angular/forms"
-import { HttpClientModule } from "@angular/common/http"
-import { OrderFormComponent } from "./components/order-form/order-form.component"
-import { OrdersComponent } from "./components/orders/orders.component"
-import { MaterialModule } from "./shared/material.module"
+import { HomeComponent } from "./home/home.component"
+import { NavbarComponent } from "./layout/navbar/navbar.component"
+import { LayoutComponent } from "./layout/layout.component"
+import { SidenavComponent } from "./layout/sidenav/sidenav.component"
 
 @NgModule({
     declarations: [
         AppComponent, //
         NavbarComponent,
         HomeComponent,
-        ContactComponent,
-        OrdersComponent,
-        OrderFormComponent,
+        LayoutComponent,
+        SidenavComponent,
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
+        FlexLayoutModule,
         BrowserAnimationsModule,
-        MaterialModule,
-        FormsModule,
         HttpClientModule,
-        ReactiveFormsModule,
+        MaterialModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFirestoreModule,
     ],

@@ -1,0 +1,143 @@
+<mat-card class="example-card">
+    <mat-card-header>
+        <mat-card-title>Order you Pizza!</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form autocomplete="off" [formGroup]="forma" (ngSubmit)="guardar()" fxLayoutGap="20px grid">
+            <div class="ingredients" formGroupName="orderDetails" fxLayout="column" fxLayoutGap="16px">
+                <mat-button-toggle-group
+                    name="doughSizes"
+                    fxFlex="40"
+                    fxLayoutAlign="center stretch"
+                    class="dough-selector"
+                >
+                    <mat-button-toggle
+                        value="{{ size }}"
+                        type="button"
+                        *ngFor="let size of pizzaSizes"
+                        (click)="setPizzaSize(size)"
+                    >
+                        {{ size | titlecase }}
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+
+                <div class="checkbox-group" formArrayName="toppings" fxFlex>
+                    <div class="form-check-inline" *ngFor="let topping of availableToppings">
+                        <label class="form-check-label">
+                            <mat-checkbox
+                                type="checkbox"
+                                class="form-check-input"
+                                value="{{ topping }}"
+                                (change)="setSelectedIngredient(topping)"
+                            ></mat-checkbox>
+                            {{ topping | titlecase }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="customer" formGroupName="customer" fxLayout="column">
+                <h2 class="customer__title">Customer Details</h2>
+                <mat-form-field class="row" appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <div class="col">
+                        <input
+                            matInput
+                            class="form-control"
+                            type="text"
+                            placeholder="Name"
+                            formControlName="name"
+                            [class.is-invalid]="invalidName"
+                        />
+                        <small *ngIf="invalidName" class="text-danger">Type more than 5 letters</small>
+                    </div>
+                </mat-form-field>
+
+                <mat-form-field class="row" appearance="outline">
+                    <mat-label>Last Name</mat-label>
+                    <div class="col">
+                        <input
+                            matInput
+                            class="form-control"
+                            type="text"
+                            placeholder="Last Name"
+                            formControlName="lastName"
+                            [class.is-invalid]="invalidLastName"
+                        />
+                        <small *ngIf="invalidLastName" class="text-danger">Type your last name</small>
+                    </div>
+                </mat-form-field>
+                <mat-form-field class="row" appearance="outline">
+                    <mat-label>Phone Number</mat-label>
+                    <div class="col">
+                        <input
+                            matInput
+                            class="form-control"
+                            type="text"
+                            placeholder="Phone Number"
+                            formControlName="phone"
+                            [class.is-invalid]="invalidPhone"
+                        />
+                        <small *ngIf="invalidPhone" class="text-danger">Type a valid phone number</small>
+                    </div>
+                </mat-form-field>
+            </div>
+            <div class="address" formGroupName="address">
+                <h2 class="customer__title">Delivery Address</h2>
+
+                <div class="form-row col" fxLayout="column">
+                    <mat-form-field class="row" appearance="outline">
+                        <mat-label>Street</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            class="form-control"
+                            placeholder="Street"
+                            formControlName="street"
+                            [class.is-invalid]="invalidStreet"
+                        />
+                    </mat-form-field>
+
+                    <mat-form-field class="row" appearance="outline">
+                        <mat-label>City</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            class="form-control"
+                            placeholder="City"
+                            formControlName="city"
+                            [class.is-invalid]="invalidCity"
+                        />
+                    </mat-form-field>
+
+                    <mat-form-field class="row" appearance="outline">
+                        <mat-label>Floor</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            class="form-control"
+                            placeholder="Floor"
+                            formControlName="floor"
+                            [class.is-invalid]="invalidFloor"
+                        />
+                    </mat-form-field>
+
+                    <mat-form-field class="row" appearance="outline">
+                        <mat-label>Dept</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            class="form-control"
+                            placeholder="Apartment number"
+                            formControlName="dept"
+                            [class.is-invalid]="invalidDept"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button (click)="guardar()" color="accent">Send Order</button>
+    </mat-card-actions>
+</mat-card>

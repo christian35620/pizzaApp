@@ -1,0 +1,27 @@
+<mat-card class="orders-card">
+    <mat-card-header>
+        <mat-card-title>Pending Orders</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-accordion *ngIf="orders.length > 0; else noorders">
+            <mat-expansion-panel *ngFor="let order of orders">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ order.customer.name }}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{ order.date | date: "M/d/yy, h:mm:ss a" }}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>OrderID: {{ order.id }}</p>
+                <button mat-raised-button (click)="deleteOrder(order)" color="accent">Delete Order</button>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <ng-template #noorders>
+            <p>
+                There are no orders yet.
+            </p>
+        </ng-template>
+    </mat-card-content>
+</mat-card>

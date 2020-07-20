@@ -1,15 +1,58 @@
 .container {
     height: 92vh;
-    // padding: 10px;
     background-image: linear-gradient(to right bottom, rgba(255, 255, 255, 0.05), rgb(255, 255, 255, 0)),
         url(~/assets/closeup_pizza.jpg);
     background-size: cover;
     background-position: top;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.button {
-    transform: scale(2) translateX(-25%);
+.btn {
+    font-size: 2rem;
+    width: fit-content;
+    position: relative;
+    z-index: 10;
+}
+
+.btn:link,
+.btn:visited {
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    transition: all 0.2s;
     position: absolute;
-    bottom: 50vh;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 15px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -10;
+    transition: all 0.4s;
+}
+
+.btn-accent::after {
+    background-color: #ff3e3e;
+}
+
+.btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
 }

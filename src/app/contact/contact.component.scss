@@ -1,5 +1,11 @@
 .contenedor {
-    height: 100vh;
+    height: 90vh;
+    background-color: lightgrey;
+    background-image: linear-gradient(to right bottom, rgba(255, 255, 255, 0.05), rgb(255, 255, 255, 0)),
+        url(~/assets/contact-image.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top;
     display: flex;
     justify-content: center;
 }
@@ -8,5 +14,6 @@
     position: absolute;
     bottom: 50vh;
     font-size: 3rem;
+    line-height: 3rem;
     font-weight: 700;
 }

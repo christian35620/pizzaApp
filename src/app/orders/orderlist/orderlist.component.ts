@@ -1,38 +1,24 @@
-import { Component, OnInit } from "@angular/core"
-import { FirestoreService } from "../../core/firestore.service"
+import { Component, Input, Output, EventEmitter } from "@angular/core"
 import { PizzaOrder } from "src/app/orders/model/pizza-order.model"
+import { Observable } from "rxjs"
 
 @Component({
     selector: "app-orderlist",
     templateUrl: "./orderlist.component.html",
     styleUrls: ["./orderlist.component.scss"],
 })
-export class OrderlistComponent implements OnInit {
-    orders = []
-    editing: boolean = false
-    editingOrder: any
+export class OrderlistComponent {
+    @Input("orders") orders$: Observable<PizzaOrder[]>
+    @Output("delete") deleteEmitter: EventEmitter<PizzaOrder> = new EventEmitter<PizzaOrder>()
+    @Output("edit") editEmitter: EventEmitter<PizzaOrder> = new EventEmitter<PizzaOrder>()
 
-    constructor(private orderService: FirestoreService) {}
+    constructor() {}
 
-    ngOnInit(): void {
-        this.orderService.getOrders().subscribe((orders) => {
-            console.log(orders)
-            this.orders = orders
-        })
+    deleteOrder(order: PizzaOrder) {
+        this.deleteEmitter.emit(order)
     }
 
-    deleteOrder(order) {
-        this.orderService.deleteOrder(order)
-    }
-
-    editOrder(order) {
-        this.editing = !this.editing
-        this.editingOrder = order
-    }
-
-    updateOrder() {
-        this.orderService.updateOrder(this.editingOrder)
-        this.editingOrder = {} as PizzaOrder
-        this.editing = false
+    editOrder(order: PizzaOrder) {
+        this.editEmitter.emit(order)
     }
 }

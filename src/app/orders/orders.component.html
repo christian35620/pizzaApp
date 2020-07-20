@@ -1,8 +1,8 @@
 <div class="contenedor">
     <div class="forms">
-        <app-order-form></app-order-form>
+        <app-order-form (add)="addOrder($event)" (update)="updateOrder($event)"></app-order-form>
     </div>
     <div class="orders">
-        <app-orderlist></app-orderlist>
+        <app-orderlist [orders]="orders$" (delete)="deleteOrder($event)" (edit)="editOrder($event)"></app-orderlist>
     </div>
 </div>

@@ -6,6 +6,7 @@
         <form autocomplete="off" [formGroup]="forma" (ngSubmit)="guardar()" fxLayoutGap="20px grid">
             <div class="ingredients" formGroupName="orderDetails" fxLayout="column" fxLayoutGap="16px">
                 <mat-button-toggle-group
+                    [value]="activeSizeValue"
                     name="doughSizes"
                     fxFlex="40"
                     fxLayoutAlign="center stretch"
@@ -25,17 +26,17 @@
                     <div class="form-check-inline" *ngFor="let topping of availableToppings">
                         <label class="form-check-label">
                             <mat-checkbox
+                                [checked]="topping.checked"
                                 type="checkbox"
                                 class="form-check-input"
-                                value="{{ topping }}"
-                                (change)="setSelectedIngredient(topping)"
+                                value="{{ topping.name }}"
+                                (change)="setSelectedIngredient(topping.name)"
                             ></mat-checkbox>
-                            {{ topping | titlecase }}
+                            {{ topping.name | titlecase }}
                         </label>
                     </div>
                 </div>
             </div>
-
             <div class="customer" formGroupName="customer" fxLayout="column">
                 <h2 class="customer__title">Customer Details</h2>
                 <mat-form-field class="row" appearance="outline">
@@ -135,9 +136,25 @@
                     </mat-form-field>
                 </div>
             </div>
+            <div class="deliveryInstructions">
+                <h2 class="deliveryInstructions__title">Delivery Instructions</h2>
+
+                <div class="form-row col" fxLayout="column">
+                    <mat-form-field class="row deliveryInstructions__textarea" appearance="outline">
+                        <textarea
+                            rows="3"
+                            matInput
+                            placeholder="Type additional delivery instructions..."
+                            formControlName="deliveryInstructions"
+                        ></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
         </form>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-raised-button (click)="guardar()" color="accent">Send Order</button>
+        <button *ngIf="!editingForm" mat-raised-button (click)="guardar()" color="accent">Send Order</button>
+        <button *ngIf="editingForm" mat-raised-button (click)="updateForm()" color="accent">Update Order</button>
+        <button *ngIf="editingForm" mat-raised-button (click)="cancel()" color="primary">Cancel</button>
     </mat-card-actions>
 </mat-card>

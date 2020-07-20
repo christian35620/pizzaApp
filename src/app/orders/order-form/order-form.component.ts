@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit, Output, EventEmitter } from "@angular/core"
 import { FormGroup, FormBuilder, FormArray, Validators } from "@angular/forms"
-import { FirestoreService } from "src/app/core/firestore.service"
+import { PizzaOrder } from "../model/pizza-order.model"
 
 @Component({
     selector: "app-order-form",
@@ -8,18 +8,44 @@ import { FirestoreService } from "src/app/core/firestore.service"
     styleUrls: ["./order-form.component.scss"],
 })
 export class OrderFormComponent implements OnInit {
+    @Output("add") addEmitter: EventEmitter<PizzaOrder> = new EventEmitter<PizzaOrder>()
+    @Output("update") updateEmitter: EventEmitter<PizzaOrder> = new EventEmitter<PizzaOrder>()
+
     forma: FormGroup
 
-    selectedToppings: string[] = []
-    pizzaSizes: string[] = ["small", "medium", "large"]
-    availableToppings: string[] = ["sausage", "pepperoni", "ham", "olives", "bacon", "corn", "pineapple", "mushrooms"]
+    editingForm: boolean
+    editingOrderId: "string"
+    activeSizeValue = ""
 
-    constructor(private fb: FormBuilder, private orderService: FirestoreService) {
+    private _pizzaSizes: string[] = [
+        "small", //
+        "medium",
+        "large",
+    ]
+    private _availableToppings = [
+        { name: "sausage", checked: false },
+        { name: "pepperoni", checked: false },
+        { name: "ham", checked: false },
+        { name: "olives", checked: false },
+        { name: "bacon", checked: false },
+        { name: "corn", checked: false },
+        { name: "pineapple", checked: false },
+        { name: "mushrooms", checked: false },
+    ]
+
+    constructor(private fb: FormBuilder) {
         this.crearFormulario()
-        this.crearListeners()
     }
 
     ngOnInit(): void {}
+
+    get availableToppings() {
+        return this._availableToppings
+    }
+
+    get pizzaSizes() {
+        return this._pizzaSizes
+    }
 
     get toppings() {
         return <FormArray>this.forma.get("orderDetails.toppings")
@@ -66,68 +92,113 @@ export class OrderFormComponent implements OnInit {
     }
 
     crearFormulario() {
-        this.forma = this.fb.group(
-            {
-                customer: this.fb.group({
-                    name: ["", [Validators.required, Validators.minLength(5)]],
-                    lastName: ["", [Validators.required]],
-                    phone: ["", [Validators.required, Validators.pattern("[0-9]*")]],
-                }),
-                address: this.fb.group({
-                    street: ["", Validators.required],
-                    city: ["", Validators.required],
-                    floor: ["", Validators.required],
-                    dept: ["", Validators.required],
-                }),
-                orderDetails: this.fb.group({
-                    toppings: this.fb.array([]),
-                    pizzaSize: [""],
-                }),
-                date: [""],
-            }
-            // {
-            //     validators: this.validadores.passwordsIguales("pass1", "pass2"),
-            // }
-        )
+        this.forma = this.fb.group({
+            customer: this.fb.group({
+                name: ["", [Validators.required, Validators.minLength(2)]],
+                lastName: ["", [Validators.required, Validators.minLength(2)]],
+                phone: ["", [Validators.required, Validators.pattern("[0-9]*")]],
+            }),
+            address: this.fb.group({
+                street: ["", Validators.required],
+                city: ["", Validators.required],
+                floor: ["", Validators.required],
+                dept: ["", Validators.required],
+            }),
+            orderDetails: this.fb.group({
+                toppings: this.fb.array([]),
+                pizzaSize: [""],
+            }),
+            date: [""],
+            deliveryInstructions: [""],
+        })
     }
 
     createIngredients(ingredientsInputs) {
-        console.log("formControl")
-        console.log(this.orderDetails)
         return this.orderDetails.setControl("toppings", this.fb.array(ingredientsInputs))
     }
 
     setSelectedIngredient(updatedIngredient: string) {
-        console.log(updatedIngredient)
-        if (this.selectedToppings.indexOf(updatedIngredient) === -1) {
-            this.selectedToppings.push(updatedIngredient)
-        } else {
-            this.selectedToppings.splice(this.selectedToppings.indexOf(updatedIngredient), 1)
-        }
+        this.availableToppings.forEach((topping) => {
+            if (topping.name == updatedIngredient) {
+                topping.checked = !topping.checked
+            }
+        })
 
-        this.createIngredients(this.selectedToppings)
-        console.log(this.selectedToppings)
+        let selectedToppings = this.availableToppings
+            .filter((topping) => {
+                return topping.checked == true
+            })
+            .map((item) => item.name)
+
+        this.createIngredients(selectedToppings)
     }
 
-    setPizzaSize(size: string) {
+    setPizzaSize(size: any) {
         this.pizzaSize.setValue(size)
+        this.activeSizeValue = size
     }
 
-    crearListeners() {
-        // this.forma.valueChanges.subscribe((valor) => {
-        //     console.log(valor)
-        // })
+    editForm(order: any) {
+        this.editingOrderId = order.id
+        this.resetForm()
+        this.editingForm = true
 
-        // this.forma.statusChanges.subscribe((status) => console.log({ status }))
+        let orderPizzaSize = order.orderDetails.pizzaSize
+        let orderToppings = order.orderDetails.toppings
+        this.forma.reset({
+            customer: {
+                name: order.customer.name,
+                lastName: order.customer.lastName,
+                phone: order.customer.phone,
+            },
+            address: {
+                street: order.address.street,
+                city: order.address.city,
+                floor: order.address.floor,
+                dept: order.address.dept,
+            },
+            orderDetails: {
+                toppings: orderToppings,
+                pizzaSize: orderPizzaSize,
+            },
+            deliveryInstructions: order.deliveryInstructions,
+        })
+        this.activeSizeValue = orderPizzaSize
+        this.availableToppings.forEach((topping) => {
+            if (orderToppings.indexOf(topping.name) != -1) {
+                topping.checked = true
+            }
+        })
+    }
 
-        this.forma.get("customer.name").valueChanges.subscribe(console.log)
+    resetForm() {
+        this.forma.reset()
+        this.activeSizeValue = ""
+        this.availableToppings.forEach((topping) => {
+            topping.checked = false
+        })
+        this.editingForm = false
+    }
+
+    cancel() {
+        this.resetForm()
     }
 
     guardar() {
-        let d = new Date().toISOString()
-        this.date.setValue(d)
-        console.log(this.forma)
+        this.setCurrentDate()
+        this.checkFormValidity()
+        this.addEmitter.emit(this.forma.value)
+        this.resetForm()
+    }
 
+    updateForm() {
+        this.setCurrentDate()
+        this.checkFormValidity()
+        this.updateEmitter.emit({ order: this.forma.value, orderId: this.editingOrderId })
+        this.resetForm()
+    }
+
+    checkFormValidity() {
         if (this.forma.invalid) {
             return Object.values(this.forma.controls).forEach((control) => {
                 if (control instanceof FormGroup) {
@@ -137,7 +208,10 @@ export class OrderFormComponent implements OnInit {
                 }
             })
         }
+    }
 
-        this.orderService.addOrder(this.forma.value)
+    setCurrentDate() {
+        let d = new Date().toISOString()
+        this.date.setValue(d)
     }
 }

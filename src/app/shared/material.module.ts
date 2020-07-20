@@ -11,6 +11,7 @@ import { MatSidenavModule } from "@angular/material/sidenav"
 import { MatIconModule } from "@angular/material/icon"
 import { MatListModule } from "@angular/material/list"
 import { MatExpansionModule } from "@angular/material/expansion"
+import { MatDialogModule } from "@angular/material/dialog"
 
 @NgModule({
     declarations: [],
@@ -26,6 +27,7 @@ import { MatExpansionModule } from "@angular/material/expansion"
         MatIconModule,
         MatListModule,
         MatExpansionModule,
+        MatDialogModule,
     ],
     exports: [
         MatButtonModule, //
@@ -39,6 +41,7 @@ import { MatExpansionModule } from "@angular/material/expansion"
         MatIconModule,
         MatListModule,
         MatExpansionModule,
+        MatDialogModule,
     ],
 })
 export class MaterialModule {}

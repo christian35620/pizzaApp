@@ -7,12 +7,14 @@ import { MaterialModule } from "../shared/material.module"
 import { OrdersRoutingModule } from "./orders-routing.module"
 import { OrderlistComponent } from "./orderlist/orderlist.component"
 import { OrderFormComponent } from "./order-form/order-form.component"
+import { DialogComponent } from "./dialog/dialog.component"
 
 @NgModule({
     declarations: [
         OrdersRoutingModule.components, //
         OrderlistComponent,
         OrderFormComponent,
+        DialogComponent,
     ],
     imports: [
         CommonModule, //
@@ -21,5 +23,6 @@ import { OrderFormComponent } from "./order-form/order-form.component"
         FormsModule,
         ReactiveFormsModule,
     ],
+    entryComponents: [DialogComponent],
 })
 export class OrdersModule {}
